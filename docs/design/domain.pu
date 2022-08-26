@@ -1,0 +1,11 @@
+@startuml domain
+class Race {
+    name:String
+
+}
+class Location {
+    city:String
+    state:String
+    country:String
+}
+@enduml
