@@ -1,0 +1,51 @@
+@startuml Domain
+
+hide circle
+hide empty members
+skinparam linetype ortho
+skinparam nodesep 200
+
+class Product {
+    name:String
+    code:String
+}
+
+class Country {
+  name:String
+  timeZone:String
+}
+
+class Process {
+  name:String
+  workflow:String
+  createdAt:DateTime
+}
+
+class Stage {
+  name:String
+  createdAt:DateTime
+}
+
+class Currency {
+  name:String
+  code:String
+  symbol:String
+}
+
+class Exchange {
+    rateFromUsd:Real
+    createdAt:DateTime
+    updatedAt:DateTime
+}
+
+Country -- "*" Product:Has >
+Country -- "*" Currency:HasOfficial >
+
+Product -- "+" Currency:HasAllowed >
+Product -- "*" Process:Has >
+
+Process -- Stage:Has >
+
+Currency -- Exchange:ExchangedBy >
+
+@enduml

@@ -1,0 +1,98 @@
+@startuml Domain
+
+
+hide circle
+hide empty members
+skinparam linetype ortho
+skinparam nodesep 200
+
+class Score {
+  amount:Money
+  status:String
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+class Loan {
+  capital:Money
+  collected:Money
+  generated:Money
+  debt:Money
+  status:String
+  takenAt:DateTime
+  dueDate:DateTIme
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+class Payment {
+    type:String
+    status:String
+    paidAt:DateTime
+    amount:Money
+    createdAt:DateTime
+    updatedAt:DateTime
+}
+
+class Agreement {
+  name:String
+  min:Money
+  max:Money
+  createdAt:DateTime
+}
+
+class Clause {
+  name:String
+  code:String
+  description:String
+  createdAt:DateTime
+}
+
+class Rate {
+  value:Percentage
+  createdAt:DateTime
+}
+
+class Fee {
+  amount:Money
+  createdAt:DateTime
+}
+
+class Charge {
+  amount:Money
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+class Revenue {
+  generated:Money
+  collected:Money
+  debt:Money
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+Product -r- Agreement:Has >
+Product -l- "*" Subscription:Has >
+
+Agreement -- Clause
+
+Clause <|-- Fee
+Clause <|-- Rate
+
+Subscription -- Score
+Subscription "*" -l- Customer:Has >
+
+Payment -- "*" Charge
+
+Loan "*" -- Subscription:BelongsTo >
+Loan -- "*" Payment:Has >
+Loan -- Currency:MadeOn >
+Loan -- "*" Revenue:Generates >
+Loan -- Agreement:RuledBy >
+
+Revenue -- Clause:AssocietedWith >
+
+Charge -- Clause
+
+@enduml

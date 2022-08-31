@@ -1,0 +1,73 @@
+@startuml Domain
+
+hide circle
+hide empty members
+skinparam linetype ortho
+skinparam nodesep 200
+
+class Customer {
+  name:String
+  nidType:String
+  nid:String
+  status:String
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+class Risk {
+  rating:String
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+class Location {
+    address:String
+    city:String
+    state:String
+    detail:String
+}
+
+class Subscription {
+    status:String
+    createdAt:DateTime
+    updatedAt:DateTime
+}
+
+class Contact {
+  name:String
+  nidType:String
+  nid:String
+  phone:String
+  email:String
+  jobTitle:String
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+class ContactRegistry {
+  priority:Integer
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+class Instance {
+  workflowId:String
+  status:String
+  cratedAt:DateTime
+  updatedAt:DateTime
+}
+
+Product -- "*" Subscription:Has >
+
+Customer -u- Location
+Customer -l- "*" Instance
+Customer -- Risk:Has >
+
+Subscription -- "+" ContactRegistry
+Subscription "*" -- Customer:Has >
+
+ContactRegistry "+" -- Contact
+
+Process -- "*" Instance:AssociatedWith <
+
+@enduml
