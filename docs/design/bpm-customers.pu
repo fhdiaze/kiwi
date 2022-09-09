@@ -50,24 +50,51 @@ class ContactRegistry {
   updatedAt:DateTime
 }
 
-class Instance {
+class ProcessInstance {
   workflowId:String
   status:String
   cratedAt:DateTime
   updatedAt:DateTime
 }
 
+class StageInstance {
+  status:String
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+class Comment {
+  text:String
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
+class File {
+  name:String
+  description:String
+  path:String
+  createdAt:DateTime
+  updatedAt:DateTime
+}
+
 Product -- "*" Subscription:Has >
 
 Customer -u- Location
-Customer -l- "*" Instance
+Customer -l- "*" ProcessInstance
 Customer -- Risk:Has >
+
+ProcessInstance -- StageInstance:Has >
+
+Comment -- "0..1" StageInstance:AssociatedWith >
+Comment -l- "0..1" File:AssociatedWith >
+
+StageInstance -- File:UploadedIn <
 
 Subscription -- "+" ContactRegistry
 Subscription "*" -- Customer:Has >
 
 ContactRegistry "+" -- Contact
 
-Process -- "*" Instance:AssociatedWith <
+Process -- "*" ProcessInstance:AssociatedWith <
 
 @enduml

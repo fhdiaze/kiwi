@@ -38,14 +38,43 @@ class Exchange {
     updatedAt:DateTime
 }
 
+class Entity #lime {
+  name:String
+  description:String
+}
+
+class Property #lime {
+  name:String
+  type:String
+}
+
+class Category #lime {
+  name:String
+  description:String
+  securityLevel:String
+  shouldBeEncrypted:Boolean
+}
+
 Country -- "*" Product:Has >
 Country -- "*" Currency:HasOfficial >
 
 Product -- "+" Currency:HasAllowed >
 Product -- "*" Process:Has >
+Product -- "*" ProductEntity:Has >
 
 Process -- Stage:Has >
 
 Currency -- Exchange:ExchangedBy >
+
+Entity -r- "*" Property:Has >
+
+Property -- "*" Property:ComposedOf >
+Property -- "0..1" Category:BelongsTo >
+
+ProductEntity -- Entity:AssociatedWith >
+ProductEntity -- "*" ProductProperty:Has >
+
+ProductProperty -- Property:MatchedWith >
+ProductProperty -- "*" ProductProperty:ComposedOf >
 
 @enduml
