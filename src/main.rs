@@ -1,4 +1,4 @@
-use crate::domain::{race::Race, discipline::Discipline};
+use crate::domain::{race::Race, discipline::Discipline, location::Location};
 
 mod modules;
 mod infra;
@@ -10,7 +10,7 @@ fn main() {
         "Go Rigo Go".to_string(),
         120.5,
         Discipline::Road,
-        domain::location::Location {
+        Location {
             address: String::from("Centro"),
             city: String::from("Villavicencio"),
             state: String::from("Meta"),
