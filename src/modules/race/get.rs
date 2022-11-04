@@ -1,6 +1,7 @@
 use crate::domain::{discipline::Discipline, location::Location, race::Race};
 
 pub struct Query {
+    // The id of the race
     id: usize,
 }
 
