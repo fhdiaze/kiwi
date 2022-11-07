@@ -3,6 +3,12 @@ name = "kiwi"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "kiwilib"
+version = "0.1.0"
+edition = "2021"
+path = "src/lib/lib.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
