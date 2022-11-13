@@ -1,6 +1,5 @@
-use std::sync::mpsc;
-use super::job::Job;
-use super::worker::Worker;
+use super::worker::{Job, Worker};
+use std::sync::{mpsc, Arc, Mutex};
 
 pub struct ThreadPool {
     workers: Vec<Worker>,
@@ -19,10 +18,11 @@ impl ThreadPool {
         assert!(size > 0);
 
         let (sender, receiver) = mpsc::channel();
+        let receiver = Arc::new(Mutex::new(receiver));
         let mut workers = Vec::with_capacity(size);
 
         for id in 0..size {
-            workers.push(Worker::new(id));
+            workers.push(Worker::new(id, receiver.clone()));
         }
 
         ThreadPool { workers, sender }
@@ -30,8 +30,9 @@ impl ThreadPool {
 
     pub fn run<F>(&self, f: F)
     where
-        F: FnOnce() -> () + Send + 'static,
+        F: FnOnce() + Send + 'static,
     {
-        self.sender.send(f);
+        let job = Box::new(f);
+        self.sender.send(job).unwrap();
     }
 }

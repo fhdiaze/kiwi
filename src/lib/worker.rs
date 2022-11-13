@@ -1,6 +1,6 @@
-use std::{thread, sync::mpsc::Receiver};
+use std::{thread, sync::{mpsc::Receiver, Arc, Mutex}};
 
-use crate::job::Job;
+pub type Job = Box<dyn FnOnce() + Send + 'static>;
 
 pub struct Worker {
     id: usize,
@@ -8,20 +8,17 @@ pub struct Worker {
 }
 
 impl Worker {
-    pub fn new(id: usize, receiver: Receiver<Job>) -> Self {
-        let thread = thread::spawn(|| {
-            receiver
+    pub fn new(id: usize, receiver: Arc<Mutex<Receiver<Job>>>) -> Self {
+        let thread = thread::spawn(move || loop {
+            let job = receiver.lock().unwrap().recv().unwrap();
+
+            println!("Worker {} got a job; executing.", id);
+
+            job();
         });
         Worker {
             id,
             thread,
         }
-    }
-
-    pub fn run<F>(&self, f: F) 
-    where
-        F: FnOnce() + Send + 'static
-    {
-        self.thread.
     }
 }

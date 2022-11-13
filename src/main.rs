@@ -1,12 +1,12 @@
-use kiwilib::ThreadPool;
+use kiwilib::threadpool::ThreadPool;
 
 use crate::modules::race;
 use std::fs;
 use std::io::prelude::*;
 use std::net::TcpListener;
 use std::net::TcpStream;
-use std::time::Duration;
 use std::thread;
+use std::time::Duration;
 
 mod domain;
 mod modules;
