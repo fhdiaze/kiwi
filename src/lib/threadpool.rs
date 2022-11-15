@@ -1,9 +1,9 @@
-use super::worker::{Job, Worker};
+use super::worker::{Message, Worker};
 use std::sync::{mpsc, Arc, Mutex};
 
 pub struct ThreadPool {
     workers: Vec<Worker>,
-    sender: mpsc::Sender<Job>,
+    sender: mpsc::Sender<Message>,
 }
 
 impl ThreadPool {
@@ -17,7 +17,7 @@ impl ThreadPool {
     pub fn new(size: usize) -> Self {
         assert!(size > 0);
 
-        let (sender, receiver) = mpsc::channel();
+        let (sender, receiver) = mpsc::channel::<Message>();
         let receiver = Arc::new(Mutex::new(receiver));
         let mut workers = Vec::with_capacity(size);
 
@@ -32,7 +32,19 @@ impl ThreadPool {
     where
         F: FnOnce() + Send + 'static,
     {
-        let job = Box::new(f);
+        let job = Message::NewJob(Box::new(f));
         self.sender.send(job).unwrap();
+    }
+}
+
+impl Drop for ThreadPool {
+    fn drop(&mut self) {
+        for _ in &self.workers {
+            self.sender.send(Message::Terminate).unwrap();
+        }
+
+        for w in &mut self.workers {
+            w.stop();
+        }
     }
 }

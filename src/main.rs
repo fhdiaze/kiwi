@@ -1,4 +1,4 @@
-use kiwilib::threadpool::ThreadPool;
+use kiwi::threadpool::ThreadPool;
 
 use crate::modules::race;
 use std::fs;
@@ -15,12 +15,12 @@ fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
     let pool = ThreadPool::new(4);
 
-    for stream in listener.incoming() {
+    for stream in listener.incoming().take(2) {
         pool.run(|| handle_connection(stream.unwrap()));
     }
 
-    let r = race::controller::handle_get();
-    println!("{:?}", r);
+    println!("Stopping the server");
+    drop(pool);
 }
 
 fn handle_connection(mut stream: TcpStream) {
