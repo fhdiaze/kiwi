@@ -12,3 +12,4 @@ path = "src/lib/lib.rs"
 
 [dependencies]
 chrono = "0.4"
+axum = "0.5"

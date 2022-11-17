@@ -3,6 +3,7 @@ use crate::domain::race::Race;
 
 pub fn handle_get() -> Race {
     let query = get::Query::new(1);
+    
     get::handle(query)
 }
 

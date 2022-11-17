@@ -1,3 +1,4 @@
+#![deny(nonstandard_style)]
 use kiwi::threadpool::ThreadPool;
 
 use crate::modules::race;
