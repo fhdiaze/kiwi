@@ -1,55 +1,21 @@
 #![deny(nonstandard_style)]
-use kiwi::threadpool::ThreadPool;
-
 use crate::modules::race;
-use std::fs;
-use std::io::prelude::*;
-use std::net::TcpListener;
-use std::net::TcpStream;
-use std::thread;
-use std::time::Duration;
+use axum::Router;
 
 mod domain;
 mod modules;
 
-fn main() {
-    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
-    let pool = ThreadPool::new(4);
-
-    for stream in listener.incoming().take(2) {
-        pool.run(|| handle_connection(stream.unwrap()));
-    }
-
-    println!("Stopping the server");
-    drop(pool);
+fn route() -> Router {
+    Router::new()
+        .nest("/api", race::controller::route())
 }
 
-fn handle_connection(mut stream: TcpStream) {
-    let mut buffer = [0; 1024];
+#[tokio::main]
+async fn main() {
+    let router = route();
 
-    stream.read(&mut buffer).unwrap();
-
-    let get = b"GET / HTTP/1.1\r\n";
-    let sleep = b"GET /sleep HTTP/1.1\r\n";
-
-    let (status_line, content_path) = if buffer.starts_with(get) {
-        let races = race::controller::handle_find();
-        println!("{:?}", races);
-        ("200 OK", "index.html")
-    } else if buffer.starts_with(sleep) {
-        thread::sleep(Duration::from_secs(5));
-        ("200 OK", "index.html")
-    } else {
-        ("404 NOT FOUND", "404.html")
-    };
-
-    let content = fs::read_to_string(content_path).unwrap();
-    let response = format!(
-        "HTTP/1.1 {}\r\nContent-Length: {}\r\n\r\n{}",
-        status_line,
-        content.len(),
-        content
-    );
-    stream.write(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
+    axum::Server::bind(&"127.0.0.1:7878".parse().unwrap())
+        .serve(router.into_make_service())
+        .await
+        .unwrap()
 }
