@@ -1,6 +1,9 @@
 use serde::Serialize;
 
 use crate::domain::{discipline::Discipline, location::Location, race::Race};
+use crate::infra::db;
+use crate::infra::db::cosmos::CosmosClient;
+use crate::modules::common::page::Page;
 
 pub struct Query {
     name: String,
@@ -18,37 +21,14 @@ impl Query {
     }
 }
 
-pub fn handle(_: Query) -> Page<RaceVm> {
-    let races = vec![
-        Race::new(
-            1,
-            "Go Rigo Go".to_string(),
-            120.5,
-            Discipline::Road,
-            Location {
-                address: String::from("Centro"),
-                city: String::from("Villavicencio"),
-                state: String::from("Meta"),
-                country: String::from("Colombia"),
-            },
-        ),
-        Race::new(
-            2,
-            "Gfny Bogota".to_string(),
-            120.5,
-            Discipline::Road,
-            Location {
-                address: String::from("Centro"),
-                city: String::from("Guatavita"),
-                state: String::from("Cundinamarca"),
-                country: String::from("Colombia"),
-            },
-        ),
-    ];
+pub async fn handle(_: Query) -> Page<RaceVm> {
+    let client = db::mongo::client();
+    let races = client.races.find().await;    
+    
+    let races_vm: Vec<RaceVm> = races.into_iter().map(|r| RaceVm::new(&r)).collect();
+    let page_size = races_vm.len();
 
-    let races_vm = races.into_iter().map(|r| RaceVm::new(&r)).collect();
-
-    Page::new(races_vm, races_vm.len(), 200)
+    Page::new(races_vm, 1, page_size, 200)
 }
 
 #[derive(Serialize)]

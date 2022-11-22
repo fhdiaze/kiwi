@@ -1,1 +1,2 @@
-mod mongo;
+pub mod cosmos;
+pub mod mongo;

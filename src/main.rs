@@ -4,6 +4,7 @@ use axum::Router;
 
 mod domain;
 mod modules;
+mod infra;
 
 fn route() -> Router {
     Router::new()
