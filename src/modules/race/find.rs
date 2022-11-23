@@ -1,8 +1,11 @@
+use futures::stream::TryStreamExt;
+use mongodb::bson::doc;
 use serde::Serialize;
 
-use crate::domain::{discipline::Discipline, location::Location, race::Race};
+use crate::domain::race::Race;
+use crate::infra::config::Config;
 use crate::infra::db;
-use crate::infra::db::cosmos::CosmosClient;
+use crate::infra::errors::error::Result;
 use crate::modules::common::page::Page;
 
 pub struct Query {
@@ -21,26 +24,33 @@ impl Query {
     }
 }
 
-pub async fn handle(_: Query) -> Page<RaceVm> {
-    let client = db::mongo::client();
-    let races = client.races.find().await;    
-    
+pub async fn handle(query: Query) -> Result<Page<RaceVm>> {
+    let races = find_races(query).await?;
     let races_vm: Vec<RaceVm> = races.into_iter().map(|r| RaceVm::new(&r)).collect();
     let page_size = races_vm.len();
 
-    Page::new(races_vm, 1, page_size, 200)
+    Ok(Page::new(races_vm, 1, page_size, 200))
+}
+
+async fn find_races(_: Query) -> Result<Vec<Race>> {
+    let config = Config::new();
+    let client = db::client::Client::new(&config.db).await?;
+    let filter = doc! {};
+    let races: Vec<_> = client.races.find(filter, None).await?.try_collect().await?;
+
+    Ok(races)
 }
 
 #[derive(Serialize)]
 pub struct RaceVm {
-    id: usize,
+    id: String,
     name: String,
 }
 
 impl RaceVm {
     fn new(race: &Race) -> Self {
         RaceVm {
-            id: race.id,
+            id: race.id.clone(),
             name: race.name.clone(),
         }
     }

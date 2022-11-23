@@ -1,11 +1,12 @@
-#[derive(Debug)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Location {
     pub address: String,
     pub city: String,
     pub state: String,
     pub country: String,
 }
-
 
 impl Location {
     pub fn new() -> Self {

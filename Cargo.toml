@@ -11,6 +11,5 @@ tokio = { version = "1", features = ["full"] }
 axum = "0.5"
 serde = { version = "1", features = ["derive"] }
 mongodb = "2.3.1"
-log = "0.4.17"
-env_logger = "0.9.3"
-error-stack = "0.2.4"
+futures = "0.3.25"
+bson = "2.4.0"
