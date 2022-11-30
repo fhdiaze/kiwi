@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Location {
@@ -10,7 +10,11 @@ pub struct Location {
 
 impl Location {
     pub fn new() -> Self {
-        let foo = "MyFooVar";
-        Location {address: "".to_string(), city: "bogota".to_string(), state: "Bogota".to_string(), country: "Colombia".to_string()}
+        Location {
+            address: "".to_string(),
+            city: "bogota".to_string(),
+            state: "Bogota".to_string(),
+            country: "Colombia".to_string(),
+        }
     }
 }

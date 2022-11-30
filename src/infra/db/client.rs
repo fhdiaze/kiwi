@@ -5,8 +5,9 @@ use crate::{
     infra::{config::DbConfig, errors::error::Result},
 };
 
+use super::traits::DbClient;
+
 pub struct Client {
-    client: mongodb::Client,
     races: mongodb::Collection<Race>,
 }
 
@@ -17,13 +18,12 @@ impl Client {
         let db = client.database(&config.db_name);
         let races = db.collection::<Race>(&config.races_collection);
 
-        Ok(Self { client, races })
+        Ok(Self { races })
     }
 }
 
-impl super::traits::Client for Client {
-    fn races(&self) -> mongodb::Collection<Race> {
-        self.races
+impl DbClient for Client {
+    fn races(&self) -> &mongodb::Collection<Race> {
+        &self.races
     }
 }
-
