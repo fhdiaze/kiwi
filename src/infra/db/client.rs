@@ -7,7 +7,7 @@ use crate::{
 
 pub struct Client {
     client: mongodb::Client,
-    pub races: mongodb::Collection<Race>,
+    races: mongodb::Collection<Race>,
 }
 
 impl Client {
@@ -20,3 +20,10 @@ impl Client {
         Ok(Self { client, races })
     }
 }
+
+impl super::traits::Client for Client {
+    fn races(&self) -> mongodb::Collection<Race> {
+        self.races
+    }
+}
+
