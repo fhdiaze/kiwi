@@ -10,14 +10,15 @@ mod infra;
 mod modules;
 
 fn route() -> Router<DynDbClient> {
-    Router::new().nest("/api", race::controller::route())
+    let races = race::controller::route();
+    Router::new().nest("/api", races)
 }
 
 #[tokio::main]
 async fn main() {
     let cfg = config::Config::new();
-    let db_client = Arc::new(db::client::Client::new(&cfg.db).await.unwrap()) as DynDbClient;
-    let router = route().with_state(db_client);
+    let db = Arc::new(db::client::Client::new(&cfg.db).await.unwrap()) as DynDbClient;
+    let router = route().with_state(db);
 
     axum::Server::bind(&"127.0.0.1:7878".parse().unwrap())
         .serve(router.into_make_service())

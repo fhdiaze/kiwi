@@ -1,4 +1,8 @@
-use crate::domain::{discipline::Discipline, location::Location, race::Race};
+use crate::{
+    domain::{discipline::Discipline, location::Location, race::Race},
+    infra::{db::traits::DynDbClient, errors::error::{AppError, Result}},
+};
+use bson::doc;
 use serde::Serialize;
 
 pub struct Query {
@@ -12,21 +16,14 @@ impl Query {
     }
 }
 
-pub fn handle(query: Query) -> RaceVm {
-    let race = Race::new(
-        query.id,
-        "Go Rigo Go".to_string(),
-        120.5,
-        Discipline::Road,
-        Location {
-            address: String::from("Centro"),
-            city: String::from("Villavicencio"),
-            state: String::from("Meta"),
-            country: String::from("Colombia"),
-        },
-    );
+pub async fn handle(db: DynDbClient, query: Query) -> Result<RaceVm> {
+    let filter = doc! {"_id": &query.id};
+    let opt_race = db.races().find_one(filter, None).await?;
 
-    RaceVm::new(&race)
+    match opt_race {
+        Some(race) => Ok(RaceVm::new(&race)),
+        None => Err(Box::new(AppError::NotFound(format!("No race was found with id={}", &query.id))))
+    }
 }
 
 #[derive(Serialize)]

@@ -6,19 +6,19 @@ use axum::{
     Json, Router,
 };
 
-async fn handle_get() -> Json<get::RaceVm> {
-    let query = get::Query::new(String::from("124324"));
-    let race_vm = get::handle(query);
+async fn handle_get(State(db): State<DynDbClient>, race_id: String) -> Json<get::RaceVm> {
+    let query = get::Query::new(race_id);
+    let race_vm = get::handle(db, query).await.unwrap();
 
     Json(race_vm)
 }
 
 async fn handle_find(
-    State(db_client): State<DynDbClient>,
+    State(db): State<DynDbClient>,
     Query(query): Query<find::Query>,
 ) -> Json<Page<find::RaceVm>> {
     let query = find::Query::new(query.name, query.city, query.country);
-    let races = find::handle(db_client, query).await.unwrap();
+    let races = find::handle(db, query).await.unwrap();
 
     Json(races)
 }

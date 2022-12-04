@@ -1,9 +1,9 @@
+use crate::domain::race::Race;
+use mongodb::Collection;
 use std::sync::Arc;
 
-use crate::domain::race::Race;
+pub type DynDbClient = Arc<dyn DbClient + Send + Sync>;
 
 pub trait DbClient {
-    fn races(&self) -> &mongodb::Collection<Race>;
+    fn races(&self) -> &Collection<Race>;
 }
-
-pub type DynDbClient = Arc<dyn DbClient + Send + Sync>;

@@ -24,17 +24,17 @@ impl Query {
     }
 }
 
-pub async fn handle(db_client: DynDbClient, query: Query) -> Result<Page<RaceVm>> {
-    let races = find_races(db_client, query).await?;
+pub async fn handle(db: DynDbClient, query: Query) -> Result<Page<RaceVm>> {
+    let races = find_races(db, query).await?;
     let races_vm: Vec<RaceVm> = races.into_iter().map(|r| RaceVm::new(&r)).collect();
     let page_size = races_vm.len();
 
     Ok(Page::new(races_vm, 1, page_size, 200))
 }
 
-async fn find_races(db_client: DynDbClient, _: Query) -> Result<Vec<Race>> {
+async fn find_races(db: DynDbClient, _: Query) -> Result<Vec<Race>> {
     let filter = doc! {};
-    let races: Vec<Race> = db_client
+    let races: Vec<Race> = db
         .races()
         .find(filter, None)
         .await?
