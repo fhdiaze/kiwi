@@ -1,29 +1,27 @@
 use super::{find, get};
-use crate::{modules::common::page::Page, infra::db::traits::DynDbClient};
+use crate::infra::{db::traits::DynDbClient, api::response};
 use axum::{
     extract::{Query, State},
+    response::Response,
     routing::get,
-    Json, Router,
+    Router,
 };
 
-async fn handle_get(State(db): State<DynDbClient>, race_id: String) -> Json<get::RaceVm> {
+async fn handle_get(State(db): State<DynDbClient>, race_id: String) -> Response {
     let query = get::Query::new(race_id);
-    let race_vm = get::handle(db, query).await.unwrap();
+    let result = get::handle(db, query).await;
 
-    Json(race_vm)
+    response::from_result(result)
 }
 
-async fn handle_find(
-    State(db): State<DynDbClient>,
-    Query(query): Query<find::Query>,
-) -> Json<Page<find::RaceVm>> {
+async fn handle_find(State(db): State<DynDbClient>, Query(query): Query<find::Query>) -> Response {
     let query = find::Query::new(query.name, query.city, query.country);
-    let races = find::handle(db, query).await.unwrap();
+    let result = find::handle(db, query).await;
 
-    Json(races)
+    response::from_result(result)
 }
 
-pub fn route() -> axum::Router<DynDbClient> {
+pub fn route() -> Router<DynDbClient> {
     Router::new()
         .route("/race.get", get(handle_get))
         .route("/race.find", get(handle_find))

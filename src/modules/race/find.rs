@@ -3,9 +3,10 @@ use mongodb::bson::doc;
 use serde::{Deserialize, Serialize};
 
 use crate::domain::race::Race;
-use crate::infra::db::traits::DynDbClient;
-use crate::infra::errors::error::Result;
-use crate::modules::common::page::Page;
+use crate::infra::{
+    core::{page::Page, result::Result},
+    db::traits::DynDbClient,
+};
 
 #[derive(Deserialize)]
 pub struct Query {
@@ -34,12 +35,7 @@ pub async fn handle(db: DynDbClient, query: Query) -> Result<Page<RaceVm>> {
 
 async fn find_races(db: DynDbClient, _: Query) -> Result<Vec<Race>> {
     let filter = doc! {};
-    let races: Vec<Race> = db
-        .races()
-        .find(filter, None)
-        .await?
-        .try_collect()
-        .await?;
+    let races: Vec<Race> = db.races().find(filter, None).await?.try_collect().await?;
 
     Ok(races)
 }

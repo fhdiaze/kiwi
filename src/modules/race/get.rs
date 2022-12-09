@@ -1,6 +1,6 @@
 use crate::{
-    domain::{discipline::Discipline, location::Location, race::Race},
-    infra::{db::traits::DynDbClient, errors::error::{AppError, Result}},
+    domain::race::Race,
+    infra::{core::result::Result, db::traits::DynDbClient, error::AppError},
 };
 use bson::doc;
 use serde::Serialize;
@@ -22,7 +22,10 @@ pub async fn handle(db: DynDbClient, query: Query) -> Result<RaceVm> {
 
     match opt_race {
         Some(race) => Ok(RaceVm::new(&race)),
-        None => Err(Box::new(AppError::NotFound(format!("No race was found with id={}", &query.id))))
+        None => Err(Box::new(AppError::NotFound(format!(
+            "No race was found with id={}",
+            &query.id
+        )))),
     }
 }
 

@@ -1,3 +1,5 @@
 pub mod db;
 pub mod config;
-pub mod errors;
+pub mod error;
+pub mod api;
+pub mod core;
