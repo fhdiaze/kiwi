@@ -1,5 +1,5 @@
 use super::{find, get};
-use crate::infra::{db::traits::DynDbClient, api::response};
+use crate::infra::{api::response, db::traits::DynDbClient};
 use axum::{
     extract::{Query, State},
     response::Response,

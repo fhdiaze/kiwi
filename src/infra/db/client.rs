@@ -1,6 +1,9 @@
 use mongodb;
 
-use crate::{domain::race::Race, infra::{config::DbConfig, core::result::Result}};
+use crate::{
+    domain::race::Race,
+    infra::{config::DbConfig, core::result::Result},
+};
 
 use super::traits::DbClient;
 

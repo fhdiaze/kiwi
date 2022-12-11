@@ -1,2 +1,2 @@
-pub mod race;
 pub mod common;
+pub mod race;

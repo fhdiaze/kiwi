@@ -1,5 +1,5 @@
-pub mod db;
-pub mod config;
-pub mod error;
 pub mod api;
+pub mod config;
 pub mod core;
+pub mod db;
+pub mod error;
