@@ -2,6 +2,7 @@ use crate::{
     domain::race::Race,
     infra::{core::result::Result, db::traits::DynDbClient, error::AppError},
 };
+
 use bson::doc;
 use serde::Serialize;
 
@@ -21,11 +22,11 @@ pub async fn handle(db: DynDbClient, query: Query) -> Result<RaceVm> {
     let opt_race = db.races().find_one(filter, None).await?;
 
     match opt_race {
-        Some(race) => Ok(RaceVm::new(&race)),
-        None => Err(Box::new(AppError::NotFound(format!(
+        Some(race) => Ok(RaceVm::from(&race)),
+        None => Err(AppError::NotFound(format!(
             "No race was found with id={}",
             &query.id
-        )))),
+        ))),
     }
 }
 
@@ -36,7 +37,7 @@ pub struct RaceVm {
 }
 
 impl RaceVm {
-    fn new(race: &Race) -> Self {
+    fn from(race: &Race) -> Self {
         RaceVm {
             id: race.id.clone(),
             name: race.name.clone(),

@@ -1,3 +1,7 @@
+use axum::{
+    response::{IntoResponse, Response},
+    Json,
+};
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -24,5 +28,11 @@ impl<T> Page<T> {
             size,
             total,
         }
+    }
+}
+
+impl<T: Serialize> IntoResponse for Page<T> {
+    fn into_response(self) -> Response {
+        Json(self).into_response()
     }
 }

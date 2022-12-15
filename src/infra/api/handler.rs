@@ -1,20 +1,17 @@
-use std::any::{Any, TypeId};
-
 use super::problem::Problem;
-use crate::infra::error::{AppError, BoxError};
-use axum::http::StatusCode;
+use crate::infra::{api::problem, error::AppError};
 
-pub fn handle(error: &BoxError) -> Problem {
-    println!("{:?}", error.type_id());
-    println!("{:?}", TypeId::of::<AppError>());
-    if error.is::<AppError>() {
-        return Problem::new(
-            StatusCode::INTERNAL_SERVER_ERROR.as_u16(),
+pub fn handle(error: &AppError) -> Problem {
+    match error {
+        AppError::NotFound(msg) => {
+            Problem::from_type(problem::Kind::NotFound, "NotFound".to_owned(), msg.clone())
+        }
+        _ => Problem::from_type(
+            problem::Kind::InternalServerError,
             "InternalServerError".to_owned(),
-            "Internal Server Error".to_owned(),
             error.to_string(),
-        );
-    }
+        ),
+    };
 
     panic!("Unrecoverable error succeed");
 }

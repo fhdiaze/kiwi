@@ -1,24 +1,29 @@
 use super::{find, get};
-use crate::infra::{api::response, db::traits::DynDbClient};
+use crate::infra::{
+    core::{page::Page, result::Result},
+    db::traits::DynDbClient,
+};
 use axum::{
     extract::{Query, State},
-    response::Response,
     routing::get,
     Router,
 };
 
-async fn handle_get(State(db): State<DynDbClient>, race_id: String) -> Response {
+async fn handle_get(State(db): State<DynDbClient>, race_id: String) -> Result<get::RaceVm> {
     let query = get::Query::new(race_id);
-    let result = get::handle(db, query).await;
+    let race = get::handle(db, query).await?;
 
-    response::from_result(result)
+    Ok(race)
 }
 
-async fn handle_find(State(db): State<DynDbClient>, Query(query): Query<find::Query>) -> Response {
+async fn handle_find(
+    State(db): State<DynDbClient>,
+    Query(query): Query<find::Query>,
+) -> Result<Page<find::RaceVm>> {
     let query = find::Query::new(query.name, query.city, query.country);
-    let result = find::handle(db, query).await;
+    let races = find::handle(db, query).await?;
 
-    response::from_result(result)
+    Ok(races)
 }
 
 pub fn route() -> Router<DynDbClient> {

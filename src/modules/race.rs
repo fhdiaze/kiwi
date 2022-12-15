@@ -1,3 +1,3 @@
 pub mod controller;
-mod find;
-mod get;
+pub mod find;
+pub mod get;
