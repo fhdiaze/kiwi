@@ -28,12 +28,12 @@ impl Problem {
     }
 
     pub fn from_type(kind: Kind, title: String, detail: String) -> Self {
-        Self::new(kind.code(), kind.kind().to_owned(), title, detail)
+        Self::new(kind.status(), kind.kind().to_owned(), title, detail)
     }
 }
 
 impl Kind {
-    fn code(&self) -> u16 {
+    fn status(&self) -> u16 {
         match self {
             Kind::NotFound => StatusCode::NOT_FOUND.as_u16(),
             Kind::BadRequest => StatusCode::BAD_REQUEST.as_u16(),
@@ -43,15 +43,15 @@ impl Kind {
 
     fn title(&self) -> &str {
         match self {
-            Kind::NotFound => StatusCode::NOT_FOUND.,
-            _ => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.1",
+            Kind::NotFound => StatusCode::NOT_FOUND.canonical_reason().unwrap(),
+            _ => StatusCode::INTERNAL_SERVER_ERROR.canonical_reason().unwrap(),
         }
     }
 
     fn kind(&self) -> &str {
         match self {
-            Kind::NotFound => "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.4",
-            _ => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.1",
+            Kind::NotFound => "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+            _ => "https://tools.ietf.org/html/rfc7231#section-6.6.1",
         }
     }
 }
