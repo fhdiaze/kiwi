@@ -25,7 +25,7 @@ pub async fn handle(db: DynDbClient, query: Query) -> Result<RaceVm> {
         Some(race) => Ok(RaceVm::from(&race)),
         None => Err(AppError::NotFound(format!(
             "No race was found with id={}",
-            &query.id
+            query.id
         ))),
     }
 }

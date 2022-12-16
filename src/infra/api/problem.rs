@@ -4,7 +4,7 @@ use serde::Serialize;
 #[derive(Serialize)]
 pub struct Problem {
     pub status: u16,
-    #[serde(rename="type")]
+    #[serde(rename = "type")]
     pub kind: String,
     pub title: String,
     pub detail: String,
@@ -26,9 +26,13 @@ impl Problem {
             detail,
         }
     }
+    
+    pub fn from_kind(kind: Kind, detail: String) -> Self {
+        Self::new(kind.status(), kind.kind(), kind.title(), detail)
+    }
 
-    pub fn from_type(kind: Kind, title: String, detail: String) -> Self {
-        Self::new(kind.status(), kind.kind().to_owned(), title, detail)
+    pub fn with_title(kind: Kind, title: String, detail: String) -> Self {
+        Self::new(kind.status(), kind.kind(), title, detail)
     }
 }
 
@@ -41,17 +45,20 @@ impl Kind {
         }
     }
 
-    fn title(&self) -> &str {
+    fn title(&self) -> String {
         match self {
-            Kind::NotFound => StatusCode::NOT_FOUND.canonical_reason().unwrap(),
-            _ => StatusCode::INTERNAL_SERVER_ERROR.canonical_reason().unwrap(),
+            Kind::NotFound => StatusCode::NOT_FOUND.canonical_reason().unwrap().to_owned(),
+            _ => StatusCode::INTERNAL_SERVER_ERROR
+                .canonical_reason()
+                .unwrap()
+                .to_owned(),
         }
     }
 
-    fn kind(&self) -> &str {
+    fn kind(&self) -> String {
         match self {
-            Kind::NotFound => "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-            _ => "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+            Kind::NotFound => "https://tools.ietf.org/html/rfc7231#section-6.5.4".to_owned(),
+            _ => "https://tools.ietf.org/html/rfc7231#section-6.6.1".to_owned(),
         }
     }
 }
