@@ -23,7 +23,7 @@ async fn main() {
     let db = Arc::new(db::client::Client::new(&cfg.db).await.unwrap()) as DynDbClient;
     let router = route().layer(ServiceBuilder::new()).with_state(db);
 
-    axum::Server::bind(&"127.0.0.1:7878".parse().unwrap())
+    axum::Server::bind(&"0.0.0.0:7878".parse().unwrap())
         .serve(router.into_make_service())
         .await
         .unwrap();
