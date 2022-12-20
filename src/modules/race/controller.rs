@@ -9,8 +9,10 @@ use axum::{
     Router,
 };
 
-async fn handle_get(State(db): State<DynDbClient>, race_id: String) -> Result<get::RaceVm> {
-    let query = get::Query::new(race_id);
+async fn handle_get(
+    State(db): State<DynDbClient>,
+    Query(query): Query<get::Query>,
+) -> Result<get::RaceVm> {
     let race = get::handle(db, query).await?;
 
     Ok(race)

@@ -4,8 +4,9 @@ use crate::{
 };
 
 use bson::doc;
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
+#[derive(Deserialize)]
 pub struct Query {
     /// The id of the race
     id: String,
