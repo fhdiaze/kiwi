@@ -3,7 +3,7 @@ use std::{error::Error, fmt};
 #[derive(Debug, Clone)]
 pub enum AppError {
     NotFound(String),
-    BadRequest(String),
+    Validation(String),
     Mongo(mongodb::error::Error)
 }
 
@@ -13,8 +13,8 @@ impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let message = match self {
             AppError::NotFound(msg) => format!("NotFound: {}", msg),
-            AppError::BadRequest(msg) => format!("BadRequest: {}", msg),
-            AppError::Mongo(err) => format!("MongoError: {}", err)
+            AppError::Validation(msg) => format!("Validation: {}", msg),
+            AppError::Mongo(err) => format!("Mongo: {}", err)
         };
         write!(f, "{}", message)
     }
