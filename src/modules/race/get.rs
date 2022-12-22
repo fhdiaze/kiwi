@@ -1,10 +1,12 @@
+use std::str::FromStr;
+
 use crate::{
     domain::race::Race,
     infra::{core::result::Result, db::traits::DynDbClient, error::AppError},
 };
 
-use bson::doc;
-use serde::{Serialize, Deserialize};
+use bson::{doc, oid::ObjectId};
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 pub struct Query {
@@ -19,8 +21,9 @@ impl Query {
 }
 
 pub async fn handle(db: DynDbClient, query: Query) -> Result<RaceVm> {
-    let filter = doc! {"_id": &query.id};
-    let opt_race = db.races().find_one(filter, None).await?;
+    let id = ObjectId::from_str(&query.id).unwrap();
+    let filter = doc! {"_id": id };
+    let opt_race = db.races().find_one(Some(filter), None).await?;
 
     match opt_race {
         Some(race) => Ok(RaceVm::from(&race)),

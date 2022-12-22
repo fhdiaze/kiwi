@@ -1,0 +1,9 @@
+GET http://172.26.244.243:7878/api/race.get?id=637d9fc563342dd480dd4039
+
+###
+
+GET http://172.26.244.243:7878/api/race.find
+
+###
+
+GET http://localhost:7878/api/race.find
