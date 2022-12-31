@@ -1,9 +1,19 @@
-GET http://172.26.244.243:7878/api/race.get?id=637d9fc563342dd480dd4039
+@kiwiApi = {{protocol}}://{{hostname}}:{{port}}/api
+
+@raceId = 637d9fc563342dd480dd4039
+GET  {{kiwiApi}}/race.get?id={{raceId}}
 
 ###
 
-GET http://172.26.244.243:7878/api/race.find
+GET {{kiwiApi}}/race.find
 
 ###
 
-GET http://localhost:7878/api/race.find
+@raceName = Gfny
+@raceCity = Villavicencio
+GET {{kiwiApi}}/race.find
+    ?name={{raceName}}
+    &city={{raceCity}}
+
+###
+

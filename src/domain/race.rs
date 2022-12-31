@@ -17,6 +17,7 @@ pub struct Race {
     pub distance: f64,
     pub discipline: Discipline,
     pub location: Location,
+    pub image: String,
 }
 
 impl Race {
@@ -27,6 +28,7 @@ impl Race {
         distance: f64,
         discipline: Discipline,
         location: Location,
+        image: String
     ) -> Self {
         Race {
             id,
@@ -34,6 +36,7 @@ impl Race {
             distance,
             discipline,
             location,
+            image
         }
     }
 }
