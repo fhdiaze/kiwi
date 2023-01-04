@@ -1,6 +1,10 @@
 name: deploydev
+concurrency: dev
 run-name: ${{ github.actor }} run this workflow
-on: [push]
+on:
+  push:
+    branches:
+      - dev
 jobs:
   check-bats-version:
     runs-on: ubuntu-latest
