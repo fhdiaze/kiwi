@@ -17,3 +17,19 @@ GET {{kiwiApi}}/race.find
 
 ###
 
+POST {{kiwiApi}}/race.create
+Content-Type: application/json
+
+{
+    "name": "test",
+    "distance": 1.2,
+    "discipline": "Road",
+    "date": "2023-12-16 16:40:36Z",
+    "location": {
+        "address": "Centro",
+        "city": "Sopo",
+        "state": "Cundinamarca",
+        "country": "Colombia"
+    },
+    "image": "empty.png"
+}

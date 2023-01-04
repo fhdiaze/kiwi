@@ -1,3 +1,4 @@
+use super::handler::handle;
 use crate::infra::error::AppError;
 use crate::modules::race;
 use axum::{
@@ -5,8 +6,6 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
-
-use super::handler::handle;
 
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
@@ -18,6 +17,12 @@ impl IntoResponse for AppError {
 }
 
 impl IntoResponse for race::get::RaceVm {
+    fn into_response(self) -> Response {
+        Json(self).into_response()
+    }
+}
+
+impl IntoResponse for race::create::RaceVm {
     fn into_response(self) -> Response {
         Json(self).into_response()
     }

@@ -67,7 +67,7 @@ impl LocationVm {
             address: location.address.clone(),
             city: location.city.clone(),
             state: location.state.clone(),
-            country: location.country.clone()
+            country: location.country.clone(),
         }
     }
 }
@@ -84,7 +84,7 @@ impl RaceVm {
         RaceVm {
             id: race.id.clone(),
             name: race.name.clone(),
-            location: LocationVm::from(&race.location)
+            location: LocationVm::from(&race.location),
         }
     }
 }
