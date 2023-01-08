@@ -9,12 +9,12 @@ pub struct Location {
 }
 
 impl Location {
-    pub fn new() -> Self {
+    pub fn new(address: String, city: String, state: String, country: String) -> Self {
         Location {
-            address: "".to_string(),
-            city: "bogota".to_string(),
-            state: "Bogota".to_string(),
-            country: "Colombia".to_string(),
+            address,
+            city,
+            state,
+            country,
         }
     }
 }

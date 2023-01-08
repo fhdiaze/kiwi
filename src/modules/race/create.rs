@@ -2,6 +2,7 @@ use crate::{
     domain::{discipline::Discipline, location::Location, race::Race},
     infra::{core::result::Result, db::traits::DynDbClient},
 };
+use bson::{doc, Document};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -16,16 +17,13 @@ pub struct Command {
 }
 
 pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RaceVm> {
-    let id = String::from("");
-    let race = Race::new(
-        id,
+    let race = Race::create(
         cmd.name,
         cmd.distance,
         cmd.discipline,
         cmd.location,
         cmd.image,
     );
-
     let result = db.races().insert_one(race, None).await?;
     let race_id = result.inserted_id.to_string();
 

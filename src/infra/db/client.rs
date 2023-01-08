@@ -1,4 +1,4 @@
-use mongodb;
+use mongodb::{self, Database};
 
 use crate::{
     domain::race::Race,
@@ -8,6 +8,7 @@ use crate::{
 use super::traits::DbClient;
 
 pub struct Client {
+    database: Database,
     races: mongodb::Collection<Race>,
 }
 
@@ -18,12 +19,16 @@ impl Client {
         let db = client.database(&config.db_name);
         let races = db.collection::<Race>(&config.races_collection);
 
-        Ok(Self { races })
+        Ok(Self { races, database: db })
     }
 }
 
 impl DbClient for Client {
     fn races(&self) -> &mongodb::Collection<Race> {
         &self.races
+    }
+
+    fn database(&self) -> &Database {
+        &self.database
     }
 }

@@ -43,7 +43,7 @@ pub struct RaceVm {
 impl RaceVm {
     fn from(race: &Race) -> Self {
         RaceVm {
-            id: race.id.clone(),
+            id: race.id.clone().unwrap(),
             name: race.name.clone(),
         }
     }

@@ -3,17 +3,18 @@
         "actix",
         "bson",
         "chrono",
+        "deploydev",
         "serde",
         "threadpool"
     ],
     "rest-client.environmentVariables": {
         "$shared": {
-            "hostname": "172.26.245.2",
+            "hostname": "172.26.247.159",
             "port": "7878",
             "protocol": "http",
         },
         "local": {
-            "hostname": "172.26.245.2",
+            "hostname": "172.26.247.159",
         }
     }
 }
