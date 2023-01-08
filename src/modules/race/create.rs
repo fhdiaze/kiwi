@@ -2,7 +2,6 @@ use crate::{
     domain::{discipline::Discipline, location::Location, race::Race},
     infra::{core::result::Result, db::traits::DynDbClient},
 };
-use bson::{doc, Document};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -17,7 +16,8 @@ pub struct Command {
 }
 
 pub async fn handle(db: DynDbClient, cmd: Command) -> Result<RaceVm> {
-    let race = Race::create(
+    let race = Race::new(
+        None,
         cmd.name,
         cmd.distance,
         cmd.discipline,

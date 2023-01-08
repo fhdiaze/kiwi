@@ -1,4 +1,3 @@
-use bson::Uuid;
 use serde::{Deserialize, Serialize};
 
 use super::{discipline::Discipline, location::Location};
@@ -21,7 +20,7 @@ pub struct Race {
 impl Race {
     /// Creates a race
     pub fn new(
-        id: String,
+        id: Option<String>,
         name: String,
         distance: f64,
         discipline: Discipline,
@@ -29,24 +28,13 @@ impl Race {
         image: String,
     ) -> Self {
         Race {
-            id: Some(id),
+            id,
             name,
             distance,
             discipline,
             location,
             image,
         }
-    }
-
-    pub fn create(
-        name: String,
-        distance: f64,
-        discipline: Discipline,
-        location: Location,
-        image: String,
-    ) -> Self {
-        let id = Uuid::new().to_string();
-        Self::new(id, name, distance, discipline, location, image)
     }
 }
 
@@ -64,7 +52,10 @@ pub mod hex_string_as_object_id {
     }
 
     /// Serializes a hex string as an ObjectId.
-    pub fn serialize<S: Serializer>(val: &Option<String>, serializer: S) -> Result<S::Ok, S::Error> {
+    pub fn serialize<S: Serializer>(
+        val: &Option<String>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error> {
         match ObjectId::parse_str(val.as_ref().unwrap()) {
             Ok(oid) => oid.serialize(serializer),
             Err(_) => Err(ser::Error::custom(format!(
