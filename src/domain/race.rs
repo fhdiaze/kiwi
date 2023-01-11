@@ -52,10 +52,10 @@ pub mod hex_string_as_object_id {
     }
 
     /// Serializes a hex string as an ObjectId.
-    pub fn serialize<S: Serializer>(
-        val: &Option<String>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error> {
+    pub fn serialize<S>(val: &Option<String>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
         match ObjectId::parse_str(val.as_ref().unwrap()) {
             Ok(oid) => oid.serialize(serializer),
             Err(_) => Err(ser::Error::custom(format!(

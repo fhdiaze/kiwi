@@ -9,12 +9,12 @@
     ],
     "rest-client.environmentVariables": {
         "$shared": {
-            "hostname": "172.26.247.159",
+            "hostname": "172.18.96.1",
             "port": "7878",
             "protocol": "http",
         },
         "local": {
-            "hostname": "172.26.247.159",
+            "hostname": "172.18.99.122",
         }
     }
 }

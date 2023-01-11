@@ -5,7 +5,7 @@ use infra::{
     config,
     db::{self, traits::DynDbClient},
 };
-use std::{net::SocketAddr, str::FromStr, sync::Arc};
+use std::{net::SocketAddr, sync::Arc};
 use tower::ServiceBuilder;
 
 mod domain;
@@ -20,7 +20,7 @@ fn route() -> Router<DynDbClient> {
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
-    let cfg = config::Config::new();
+    let cfg = config::Config::new().unwrap();
     let db = Arc::new(db::client::Client::new(&cfg.db).await.unwrap()) as DynDbClient;
     let router = route().layer(ServiceBuilder::new()).with_state(db);
     let addr = SocketAddr::from(([0, 0, 0, 0], 7878));

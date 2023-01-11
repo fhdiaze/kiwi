@@ -2,7 +2,7 @@ use mongodb::{self, Database};
 
 use crate::{
     domain::race::Race,
-    infra::{config::DbConfig, core::result::Result},
+    infra::{config::Db, core::result::Result},
 };
 
 use super::traits::DbClient;
@@ -13,7 +13,7 @@ pub struct Client {
 }
 
 impl Client {
-    pub async fn new(config: &DbConfig) -> Result<Self> {
+    pub async fn new(config: &Db) -> Result<Self> {
         let options = mongodb::options::ClientOptions::parse(&config.connection_string).await?;
         let client = mongodb::Client::with_options(options)?;
         let db = client.database(&config.db_name);
