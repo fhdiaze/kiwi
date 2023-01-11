@@ -16,5 +16,6 @@ RUN cargo build --release
 
 FROM rust
 COPY --from=build /kiwi/target/release/kiwi .
+COPY ./config ./config
 
 CMD ["./kiwi"]

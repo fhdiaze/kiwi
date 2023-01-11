@@ -34,12 +34,12 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new() -> Result<Self, conf::ConfigError> {
+    pub fn new() -> Self {
         let config = conf::Config::builder()
-            .add_source(conf::Environment::with_prefix("KIWI"))
-            .add_source(conf::File::with_name("./config/default"))
-            .build()?;
-            
-        config.try_deserialize()
+            .add_source(conf::Environment::with_prefix("KIWI").separator("__"))
+            .add_source(conf::File::with_name("./config/default.toml"))
+            .build().expect("Config settings could not be loaded");
+
+        config.try_deserialize().expect("Config settings could not be deserialized")
     }
 }
